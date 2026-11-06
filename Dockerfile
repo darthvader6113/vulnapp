@@ -2,20 +2,22 @@ FROM node:20-slim AS builder
 WORKDIR /app
 
 ENV NODE_ENV=development
-ENV PATH="/app/node_modules/.bin:$PATH"
 
+# Copy package manifests and install dependencies
 COPY package.json package-lock.json* ./
 RUN npm install
 
 # Ensure public/uploads folder exists in container
 RUN mkdir -p public/uploads
 
+# Copy configurations and source files
 COPY tsconfig.json next.config.mjs tailwind.config.ts postcss.config.js next-env.d.ts* ./
 COPY src ./src
 COPY public ./public
 
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN ./node_modules/.bin/next build
+# Invoke Next.js CLI directly via node (bypasses shell symlink & PATH issues)
+RUN node node_modules/next/dist/bin/next build
 
 # Production runner stage
 FROM node:20-slim AS runner
@@ -32,7 +34,7 @@ RUN groupadd --system --gid 1001 nodejs && \
     mkdir -p /app/public/uploads && \
     chown -R nextjs:nodejs /app/public/uploads
 
-COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 

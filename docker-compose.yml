@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      network: host
     container_name: vulnlms-app
     restart: unless-stopped
     ports:

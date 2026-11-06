@@ -3,9 +3,9 @@ WORKDIR /app
 
 ENV NODE_ENV=development
 
-# Copy package manifests and install dependencies
-COPY package.json package-lock.json* ./
-RUN npm install
+# Copy package manifest (avoiding Windows package-lock to ensure clean Linux native binaries)
+COPY package.json ./
+RUN npm install --no-audit --include=dev
 
 # Ensure public/uploads folder exists in container
 RUN mkdir -p public/uploads
@@ -16,8 +16,7 @@ COPY src ./src
 COPY public ./public
 
 ENV NEXT_TELEMETRY_DISABLED=1
-# Invoke Next.js CLI directly via node (bypasses shell symlink & PATH issues)
-RUN node node_modules/next/dist/bin/next build
+RUN ./node_modules/.bin/next build
 
 # Production runner stage
 FROM node:20-slim AS runner

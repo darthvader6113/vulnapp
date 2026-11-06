@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #090d16;
+  --foreground: #f1f5f9;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+  min-height: 100vh;
+}
+
+/* Ark UI component styles - Flat, no shadows, subtle curves */
+[data-scope="tabs"][data-part="trigger"] {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  color: #94a3b8;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+[data-scope="tabs"][data-part="trigger"][data-selected] {
+  color: #38bdf8;
+  border-bottom-color: #38bdf8;
+}
+
+[data-scope="dialog"][data-part="backdrop"] {
+  background: rgba(0, 0, 0, 0.85);
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+[data-scope="dialog"][data-part="positioner"] {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+[data-scope="accordion"][data-part="item-trigger"] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  background-color: #111827;
+  border-radius: 0.25rem;
+}
+
+[data-scope="accordion"][data-part="item-content"] {
+  padding: 1rem;
+  background-color: #0b0f19;
+  border: 1px solid #1f2937;
+  border-top: none;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}

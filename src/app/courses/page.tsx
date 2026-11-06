@@ -46,47 +46,7 @@ export default function CoursesPage() {
   const seedSampleCourses = async () => {
     setSeeding(true);
     try {
-      const sample = [
-        {
-          title: "Introduction to Web Application Security (OWASP)",
-          description: "Learn fundamental web application security concepts, vulnerability classifications, and defense in depth.",
-          category: "Security",
-          modules: [
-            { title: "Module 1: Authentication & Authorization", content: "Understanding JWTs, sessions, and access control models.", duration: "30 min" },
-            { title: "Module 2: Injection Attacks & Sanitization", content: "Deep dive into SQL, NoSQL, and Command Injection.", duration: "45 min" },
-          ],
-          attachments: [
-            { name: "OWASP_Top_10_Reference.pdf", url: "/uploads/sample_cheatsheet.pdf", fileType: "application/pdf", size: 102400 },
-          ],
-        },
-        {
-          title: "Full-Stack TypeScript & Next.js Architecture",
-          description: "Build robust, scalable web applications using Next.js App Router, TypeScript, and MongoDB.",
-          category: "Development",
-          modules: [
-            { title: "Module 1: App Router Deep Dive", content: "Server components, route handlers, and middleware.", duration: "40 min" },
-          ],
-          attachments: [],
-        },
-        {
-          title: "Cloud & Container Security with Docker",
-          description: "Container isolation, Docker security scanning, non-root users, and multi-stage builds.",
-          category: "DevOps",
-          modules: [
-            { title: "Module 1: Container Hardening", content: "Securing Dockerfiles, runtime limits, and least privilege.", duration: "35 min" },
-          ],
-          attachments: [],
-        },
-      ];
-
-      for (const course of sample) {
-        await fetch("/api/courses", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(course),
-        });
-      }
-
+      await fetch("/api/seed", { method: "POST" });
       await fetchCourses();
     } catch (err) {
       console.error(err);

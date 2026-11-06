@@ -4,22 +4,24 @@ WORKDIR /app
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV PATH="/app/node_modules/.bin:$PATH"
 
-# Copy package files
+# 1. Install dependencies inside container
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy application source
-COPY . .
+# 2. Copy source code explicitly (never copies host node_modules or .next)
+COPY tsconfig.json next.config.mjs tailwind.config.ts postcss.config.js next-env.d.ts* ./
+COPY public ./public
+COPY src ./src
 
-# Ensure public/uploads exists
+# Ensure public/uploads folder exists
 RUN mkdir -p public/uploads
 
-# Build the application
+# 3. Build using npm
 RUN npm run build
 
 EXPOSE 3000
 
+# 4. Start with npm
 CMD ["npm", "start"]

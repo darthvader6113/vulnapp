@@ -3,9 +3,9 @@ WORKDIR /app
 
 ENV NODE_ENV=development
 
-# Copy package manifest (avoiding Windows package-lock to ensure clean Linux native binaries)
-COPY package.json ./
-RUN npm install --no-audit --include=dev
+# Copy package manifests (copying package-lock allows fast deterministic install via npm ci)
+COPY package.json package-lock.json* ./
+RUN npm ci --no-audit || npm install --no-audit
 
 # Ensure public/uploads folder exists in container
 RUN mkdir -p public/uploads

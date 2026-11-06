@@ -7,6 +7,9 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     environment:
       - NODE_ENV=production
       - MONGODB_URI=mongodb://mongo:27017/vulnlms
@@ -30,9 +33,11 @@ services:
     image: cloudflare/cloudflared:latest
     container_name: vulnlms-cloudflared
     restart: unless-stopped
+    profiles:
+      - tunnel
     command: tunnel --no-autoupdate run
     environment:
-      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN:-}
     depends_on:
       - app
 

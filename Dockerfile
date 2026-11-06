@@ -1,17 +1,23 @@
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# Copy dependency definitions
+# Ensure devDependencies are installed and local node_modules binaries are in PATH
+ENV NODE_ENV=development
+ENV PATH="/app/node_modules/.bin:$PATH"
+
+# Copy package manifests
 COPY package.json package-lock.json* ./
 
-# Install all dependencies (devDependencies needed for Next.js build)
+# Install all dependencies directly in Linux
 RUN npm install
 
-# Copy source code (respects .dockerignore)
-COPY . .
+# Copy project source files explicitly (prevents accidentally copying Windows host node_modules/.bin)
+COPY tsconfig.json next.config.mjs tailwind.config.ts postcss.config.js next-env.d.ts* ./
+COPY public ./public
+COPY src ./src
 
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
+RUN npx next build
 
 # Production runner stage
 FROM node:20-slim AS runner

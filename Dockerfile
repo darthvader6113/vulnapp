@@ -2,21 +2,20 @@ FROM node:20-slim AS builder
 WORKDIR /app
 
 ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Copy package manifests (copying package-lock allows fast deterministic install via npm ci)
+# Copy package manifests and configs
 COPY package.json package-lock.json* ./
-RUN npm ci --no-audit || npm install --no-audit
-
-# Ensure public/uploads folder exists in container
-RUN mkdir -p public/uploads
-
-# Copy configurations and source files
 COPY tsconfig.json next.config.mjs tailwind.config.ts postcss.config.js next-env.d.ts* ./
 COPY src ./src
 COPY public ./public
 
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN ./node_modules/.bin/next build
+# Ensure uploads directory exists
+RUN mkdir -p public/uploads
+
+# Install dependencies and build atomically in the same step
+RUN npm install --no-audit && \
+    node node_modules/next/dist/bin/next build
 
 # Production runner stage
 FROM node:20-slim AS runner

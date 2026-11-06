@@ -15,7 +15,7 @@ COPY src ./src
 COPY public ./public
 
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npx next build
+RUN ./node_modules/.bin/next build
 
 # Production runner stage
 FROM node:20-slim AS runner

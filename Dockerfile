@@ -1,24 +1,24 @@
-FROM node:20-slim
+FROM node:20
 
 WORKDIR /app
 
-ENV NEXT_TELEMETRY_DISABLED=1
-
-# Copy project files (respects .dockerignore)
-COPY . .
-
-# Ensure public/uploads folder exists
-RUN mkdir -p public/uploads
-
-# Install dependencies inside the container
-RUN npm install --no-audit
-
-# Build the application using npm
-RUN npm run build
-
-ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy application source
+COPY . .
+
+# Ensure public/uploads exists
+RUN mkdir -p public/uploads
+
+# Build the application
+RUN npm run build
 
 EXPOSE 3000
 

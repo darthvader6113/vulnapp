@@ -1,7 +1,6 @@
 @echo off
 echo ==============================================
-echo   Building and Starting VulnLMS Containers
+echo   Starting VulnLMS and MongoDB Containers
 echo ==============================================
-call npm run build
 docker compose up --build
 pause

@@ -2,6 +2,5 @@
 echo "=============================================="
 echo "  Building and Starting VulnLMS Containers"
 echo "=============================================="
-docker compose build --no-cache
-docker compose up
-
+npm run build
+docker compose up --build

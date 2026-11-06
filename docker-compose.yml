@@ -16,15 +16,25 @@ services:
       - uploads_data:/app/public/uploads
     depends_on:
       - mongo
+    networks:
+      - vulnlms-network
 
   mongo:
-    image: mongo:7.0
+    image: mongo:4.4
     container_name: vulnlms-mongo
     restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      vulnlms-network:
+        aliases:
+          - mongo
+
+networks:
+  vulnlms-network:
+    driver: bridge
 
 volumes:
   mongo_data:

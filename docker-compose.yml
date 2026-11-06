@@ -1,3 +1,4 @@
+
 services:
   app:
     build:
@@ -5,8 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: vulnlms-app
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
       - NODE_ENV=production
       - MONGODB_URI=mongodb://mongo:27017/vulnlms
@@ -21,12 +22,19 @@ services:
     image: mongo:7.0
     container_name: vulnlms-mongo
     restart: unless-stopped
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: vulnlms-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    depends_on:
+      - app
 
 volumes:
   mongo_data:
   uploads_data:
-
